@@ -34,3 +34,20 @@ jobs:
 
       - name: "Run Lint"
         run: npm run lint
+
+  Vitest:
+    name: Vitest
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Setup node"
+        uses: actions/setup-node@v4
+
+      - name: "Setup dependencies"
+        run: npm ci
+
+      - name: "Run Vitest"
+        run: npm run test
