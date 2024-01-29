@@ -18,8 +18,19 @@ permissions:
   id-token: write
 
 jobs:
-  hello:
-    name: Echo Hello World
+  Linter:
+    name: Linter
     runs-on: ubuntu-latest
     steps:
-      - run: echo Hello World
+
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Setup node"
+        uses: actions/setup-node@v4
+
+      - name: "Setup dependencies"
+        run: npm ci
+
+      - name: "Run Lint"
+        run: npm run lint
