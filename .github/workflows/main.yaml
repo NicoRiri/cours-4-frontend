@@ -79,6 +79,12 @@ jobs:
         with:
           path: ./dist
 
+      - name: "Upload Artifact"
+        uses: actions/upload-artifact@v3
+        with:
+          name: prod
+          path: ./dist
+
   cypress:
     name: Cypress
     needs:
@@ -94,7 +100,8 @@ jobs:
       - name: "Download Artifact"
         uses: actions/download-artifact@v4
         with:
-          name: github-pages
+          path: ./dist
+          name: prod
 
       - name: "Test Cypress"
         uses: cypress-io/github-action@v4
