@@ -37,6 +37,8 @@ jobs:
 
   Vitest:
     name: Vitest
+    env:
+      VITE_APP_NAME : test
     runs-on: ubuntu-latest
     steps:
 
@@ -51,3 +53,62 @@ jobs:
 
       - name: "Run Vitest"
         run: npm run test
+
+  build:
+    name: Build
+    needs:
+      - Vitest
+      - Linter
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Setup node"
+        uses: actions/setup-node@v4
+
+      - name: "Setup dependencies"
+        run: npm ci
+
+      - name: "Run Vitest"
+        run: npm run build
+
+      - name: "Upload Artifact"
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  cypress:
+    name: Cypress
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Setup node"
+        uses: actions/setup-node@v4
+
+      - name: "Download Artifact"
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+
+      - name: "Test Cypress"
+        uses: cypress-io/github-action@v4
+        with:
+          start: npm run preview
+          wait-on: "http://localhost:4173"
+
+  deploy:
+    name: "Deploy"
+    runs-on: ubuntu-latest
+    needs:
+      - cypress
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
