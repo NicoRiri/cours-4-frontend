@@ -80,7 +80,7 @@ jobs:
           path: ./dist
 
       - name: "Upload Artifact"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: prod
           path: ./dist
